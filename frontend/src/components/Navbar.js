@@ -1,4 +1,5 @@
 import { Link, NavLink } from "react-router-dom";
+//falta fazer funcionar o botão do menu responsivo
 
 const Navbar = () => {
     return (
