@@ -41,6 +41,7 @@ const TableAlunos = ({ alunos, setAlunos }) => {
                     <tr>
                         <th>Nome</th>
                         <th>Data Nascimento</th>
+                        <th>Telefone</th>
                         <th>E-mail</th>
                         <th>Sexo</th>
                         <th>Situação</th>
@@ -52,6 +53,7 @@ const TableAlunos = ({ alunos, setAlunos }) => {
                         <tr key={aluno._id}>
                             <td>{aluno.nome}</td>
                             <td>{new Date(aluno.dataNascimento).toLocaleDateString("pt-br")}</td>
+                            <td>{aluno.telefone}</td>
                             <td>{aluno.email}</td>
                             <td>{aluno.sexo === "M" ? "Masculino" : "Feminino"}</td>
                             <td>{aluno.ativo ? "Ativo" : "Inativo"}</td>
@@ -69,7 +71,7 @@ const TableAlunos = ({ alunos, setAlunos }) => {
             </table>
 
             <ConfirmModal question={`Deseja realmente excluir o aluno <b>${alunoExcluir?.nome}</b>?`} action={excluirAluno} />
-            <InformModal message={`Aluno <b>${alunoExcluir?.nome}</b> excluído com sucesso.`} />
+            <InformModal info={`Aluno <b>${alunoExcluir?.nome}</b> excluído com sucesso.`} />
         </>
     );
 };

@@ -1,7 +1,7 @@
 import parse from "html-react-parser";
 import purify from "dompurify";
 
-const InformModal = ({ message }) => {
+const InformModal = ({ info, action }) => {
     return (
         <div className="modal fade" id="informModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div className="modal-dialog modal-dialog-centered">
@@ -13,9 +13,9 @@ const InformModal = ({ message }) => {
                         </h5>
                         <button type="button" className="btn-close" data-bs-dismiss="modal"></button>
                     </div>
-                    <div className="modal-body">{parse(purify.sanitize(message))}</div>
+                    <div className="modal-body">{parse(purify.sanitize(info))}</div>
                     <div className="modal-footer">
-                        <button type="button" className="btn btn-primary" data-bs-dismiss="modal">
+                        <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={action}>
                             Ok
                         </button>
                     </div>
