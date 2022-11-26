@@ -1,3 +1,7 @@
+import parse from "html-react-parser";
+import purify from "dompurify";
+//https://vhudyma-blog.eu/render-raw-html-in-react/
+
 const ConfirmModal = ({ question, action }) => {
     return (
         <div className="modal fade" id="confirmModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -9,7 +13,7 @@ const ConfirmModal = ({ question, action }) => {
                         </h5>
                         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div className="modal-body">{question}</div>
+                    <div className="modal-body">{parse(purify.sanitize(question))}</div>
                     <div className="modal-footer">
                         <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
                             Não
