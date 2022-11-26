@@ -23,6 +23,10 @@ const Cadastro = () => {
         telefone: yup.string().length(11, "Telefone está incompleto.").required("Telefone é obrigatório."),
         email: yup.string().email("E-mail inválido.").required("E-mail é obrigatório."),
         senha: yup.string().min(6, "Senha deve ter pelo menos 6 caracteres.").max(12, "Senha deve ter no máximo 12 caracteres.").required("Senha é obrigatória."),
+        confSenha: yup
+            .string()
+            .oneOf([yup.ref("senha"), null], "Confirmação de Senha e Senha devem ser iguais.")
+            .required("Confirmação de Senha é obrigatória."),
         ativo: yup.boolean().required("Situação é obrigatória."),
     });
 
@@ -44,6 +48,8 @@ const Cadastro = () => {
                     .then((response) => {
                         if (response.status === 201) {
                             modal.show();
+                        } else {
+                            console.log(response);
                         }
                     })
                     .catch((error) => {

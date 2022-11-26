@@ -52,7 +52,7 @@ const TableAlunos = ({ alunos, setAlunos }) => {
                     {alunos.map((aluno) => (
                         <tr key={aluno._id}>
                             <td>{aluno.nome}</td>
-                            <td>{new Date(aluno.dataNascimento).toLocaleDateString("pt-br")}</td>
+                            <td>{new Date(aluno.dataNascimento.substring(0, 10) + "T12:00:00").toLocaleDateString()}</td>
                             <td>{aluno.telefone}</td>
                             <td>{aluno.email}</td>
                             <td>{aluno.sexo === "M" ? "Masculino" : "Feminino"}</td>
