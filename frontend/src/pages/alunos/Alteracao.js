@@ -1,18 +1,22 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import * as yup from "yup";
 import axios from "axios";
 import bootstrap from "bootstrap/dist/js/bootstrap.bundle.min.js";
 import FormAluno from "../../components/FormAluno";
 import InformModal from "../../components/InformModal";
 
-const Cadastro = () => {
+const Alteracao = () => {
     const [inputs, setInputs] = useState({});
     const [errors, setErrors] = useState({});
     const [modal, setModal] = useState(undefined);
-
     const navigate = useNavigate();
+
+    const idAluno = useParams().id;
+    if (!idAluno) {
+        navigate("/listagem");
+    }
 
     //https://github.com/jquense/yup
     const validator = yup.object().shape({
@@ -22,11 +26,12 @@ const Cadastro = () => {
         sexo: yup.string().oneOf(["M", "F", "O"], "Gênero está incorreto.").required("Gênero é obrigatório."),
         telefone: yup.string().length(11, "Telefone está incompleto.").required("Telefone é obrigatório."),
         email: yup.string().email("E-mail inválido.").required("E-mail é obrigatório."),
-        senha: yup.string().min(6, "Senha deve ter pelo menos 6 caracteres.").max(12, "Senha deve ter no máximo 12 caracteres.").required("Senha é obrigatória."),
-        confSenha: yup
-            .string()
-            .oneOf([yup.ref("senha"), null], "Confirmação de Senha e Senha devem ser iguais.")
-            .required("Confirmação de Senha é obrigatória."),
+        //durante a alteração, senha e confSenha não são obrigatórios
+        // senha: yup.string().min(6, "Senha deve ter pelo menos 6 caracteres.").max(12, "Senha deve ter no máximo 12 caracteres.").required("Senha é obrigatória."),
+        // confSenha: yup
+        //     .string()
+        //     .oneOf([yup.ref("senha"), null], "Confirmação de Senha e Senha devem ser iguais.")
+        //     .required("Confirmação de Senha é obrigatória."),
         ativo: yup.boolean().required("Situação é obrigatória."),
     });
 
@@ -44,9 +49,9 @@ const Cadastro = () => {
             .then(() => {
                 setErrors({});
                 axios
-                    .post("http://localhost:8080/api/alunos", inputs)
+                    .put(`http://localhost:8080/api/alunos/${idAluno}`, inputs)
                     .then((response) => {
-                        if (response.status === 201) {
+                        if (response.status === 200) {
                             modal.show();
                         } else {
                             console.log(response);
@@ -72,6 +77,19 @@ const Cadastro = () => {
     useEffect(() => {
         const informModal = new bootstrap.Modal("#informModal", {});
         setModal(informModal);
+        setInputs({ ...inputs, id: idAluno });
+        axios
+            .get(`http://localhost:8080/api/alunos/${idAluno}`)
+            .then((response) => {
+                if (response.status === 200) {
+                    setInputs(response.data);
+                } else {
+                    console.log(response);
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }, []);
 
     useEffect(() => {
@@ -94,7 +112,7 @@ const Cadastro = () => {
     return (
         <>
             <div className="d-flex justify-content-between align-items-center">
-                <h1>Novo Aluno</h1>
+                <h1>Alteração de Aluno</h1>
             </div>
             <hr />
             <form onSubmit={handleSubmit} noValidate autoComplete="off">
@@ -108,9 +126,9 @@ const Cadastro = () => {
                     </button>
                 </div>
             </form>
-            <InformModal info="Aluno cadastrado com sucesso!" action={closeModalAndRedirect} />
+            <InformModal info="Aluno alterado com sucesso!" action={closeModalAndRedirect} />
         </>
     );
 };
 
-export default Cadastro;
+export default Alteracao;
