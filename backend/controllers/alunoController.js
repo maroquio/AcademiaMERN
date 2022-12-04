@@ -1,14 +1,22 @@
 import Aluno from "../models/Aluno.js";
 import bcrypt from "bcryptjs";
+import { createError } from "../utils/error.js";
 
 export const createAluno = async (req, res, next) => {
+    console.log("Request body: ", req.body);
+    const confSenha = req.body.confSenha;
     const aluno = new Aluno(req.body);
     try {
-        let salt = await bcrypt.genSalt(10);
-        let hashSenha = await bcrypt.hash(aluno.senha, salt);
-        aluno.senha = hashSenha;
-        const createdAluno = await aluno.save();
-        res.status(201).json(createdAluno);
+        if (aluno.senha != confSenha) {
+            createError({ statusCode: 400, message: "As senhas não conferem." });
+        } else {
+            let salt = await bcrypt.genSalt(10);
+            let hashSenha = await bcrypt.hash(aluno.senha, salt);
+            aluno.senha = hashSenha;
+            const createdAluno = await aluno.save();
+            console.log("Aluno criado: ", createdAluno);
+            res.status(201).json(createdAluno);
+        }
     } catch (error) {
         next(error);
     }
@@ -16,10 +24,13 @@ export const createAluno = async (req, res, next) => {
 
 export const updateAluno = async (req, res, next) => {
     try {
-        const updatedAluno = await Aluno.findByIdAndUpdate(req.params.id, {
-            $set:
-                req.body
-        }, { new: true });
+        const updatedAluno = await Aluno.findByIdAndUpdate(
+            req.params.id,
+            {
+                $set: req.body,
+            },
+            { new: true }
+        );
         res.status(200).json(updatedAluno);
     } catch (error) {
         next(error);

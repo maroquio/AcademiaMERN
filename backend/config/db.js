@@ -15,32 +15,40 @@ const populateDatabase = async () => {
         {
             nome: "João",
             dataNascimento: new Date(2000, 1, 1),
+            cpf: "11111111111",
             sexo: "M",
+            telefone: "28999998888",
             email: "joao@email.com",
-            senha: bcrypt.hash("123456", 10),
+            senha: await bcrypt.hash("123456", 10),
             ativo: true,
         },
         {
             nome: "Maria",
             dataNascimento: new Date(1990, 1, 1),
+            cpf: "22222222222",
             sexo: "F",
+            telefone: "28999997777",
             email: "maria@email.com",
-            senha: bcrypt.hash("123456", 10),
+            senha: await bcrypt.hash("123456", 10),
             ativo: true,
         },
         {
             nome: "José",
             dataNascimento: new Date(1985, 1, 1),
+            cpf: "33333333333",
             sexo: "M",
+            telefone: "28999996666",
             email: "jose@email.com",
-            senha: bcrypt.hash("123456", 10),
+            senha: await bcrypt.hash("123456", 10),
             ativo: false,
         },
     ];
 
-    if (Aluno.countDocuments() === 0) {
+    // await Aluno.deleteMany({});
+    // console.log("Alunos deletados com sucesso.");
+    if ((await Aluno.countDocuments({})) === 0) {
         await Aluno.insertMany(alunos);
-        console.log("Alunos populados com sucesso.");
+        console.log("Alunos inseridos com sucesso.");
     }
 };
 

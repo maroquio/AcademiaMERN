@@ -11,11 +11,21 @@ const AlunoSchema = new Schema(
             type: Date,
             required: true,
         },
+        cpf: {
+            type: String,
+            required: true,
+            trim: true,
+        },
         sexo: {
             type: String,
             required: true,
             trim: true,
             enum: ["M", "F"],
+        },
+        telefone: {
+            type: String,
+            required: true,
+            trim: true,
         },
         email: {
             type: String,
