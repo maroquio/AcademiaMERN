@@ -3,7 +3,6 @@ import bcrypt from "bcryptjs";
 import { createError } from "../utils/error.js";
 
 export const createAluno = async (req, res, next) => {
-    console.log("Request body: ", req.body);
     const confSenha = req.body.confSenha;
     const aluno = new Aluno(req.body);
     try {
@@ -47,6 +46,7 @@ export const deleteAluno = async (req, res, next) => {
 };
 
 export const getAluno = async (req, res, next) => {
+    //a senha hash do aluno não deveria ser retornada
     try {
         const aluno = await Aluno.findById(req.params.id);
         res.status(200).json(aluno);
@@ -56,6 +56,7 @@ export const getAluno = async (req, res, next) => {
 };
 
 export const getAlunos = async (req, res, next) => {
+    //a senha hash do aluno não deveria ser retornada
     try {
         const alunos = await Aluno.find();
         res.status(200).json(alunos);
