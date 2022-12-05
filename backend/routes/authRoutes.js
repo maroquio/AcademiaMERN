@@ -1,7 +1,9 @@
 import express from "express";
 import { login } from "../controllers/authController.js";
 import { verificarAdmin, verificarToken, verificarUsuario } from "../utils/verificarToken.js";
+
 const router = express.Router();
+
 router.post("/login", login);
 
 router.get("/verificartoken", verificarToken, (req, res) => {

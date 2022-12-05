@@ -7,6 +7,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import Alunos from "./pages/alunos/Listagem";
 import Cadastro from "./pages/alunos/Cadastro";
 import Alteracao from "./pages/alunos/Alteracao";
+import Login from "./pages/Login";
 
 const App = () => {
     return (
@@ -20,8 +21,9 @@ const App = () => {
                             <Route path="cadastrar" element={<Cadastro />} />
                             <Route path="alterar/:id" element={<Alteracao />} />
                         </Route>
-                        <Route path="*" element={<NotFound />} />
                     </Route>
+                    <Route path="/login" element={<Login />} />
+                    <Route path="*" element={<NotFound />} />
                 </Routes>
             </BrowserRouter>
         </>
