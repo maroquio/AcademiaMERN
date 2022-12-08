@@ -6,6 +6,7 @@ import axios from "axios";
 import bootstrap from "bootstrap/dist/js/bootstrap.bundle.min.js";
 import FormAluno from "../../components/FormAluno";
 import InformModal from "../../components/InformModal";
+import { authHeader } from "../../services/authServices";
 
 const Cadastro = () => {
     const [inputs, setInputs] = useState({});
@@ -44,7 +45,7 @@ const Cadastro = () => {
             .then(() => {
                 setErrors({});
                 axios
-                    .post("http://localhost:8080/api/alunos", inputs)
+                    .post("http://localhost:8080/api/alunos", inputs, { headers: authHeader() })
                     .then((response) => {
                         if (response.status === 201) {
                             modal.show();
@@ -98,7 +99,7 @@ const Cadastro = () => {
             </div>
             <hr />
             <form onSubmit={handleSubmit} noValidate autoComplete="off">
-                <FormAluno handleChange={handleChange} inputs={inputs} errors={errors} />
+                <FormAluno handleChange={handleChange} inputs={inputs} errors={errors} isNew={true} />
                 <div className="mt-3">
                     <Link to="/alunos" className="btn btn-secondary me-1">
                         Cancelar

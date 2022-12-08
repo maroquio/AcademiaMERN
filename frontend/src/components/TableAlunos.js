@@ -4,6 +4,7 @@ import axios from "axios";
 import bootstrap from "bootstrap/dist/js/bootstrap.bundle.min.js";
 import ConfirmModal from "./ConfirmModal";
 import InformModal from "./InformModal";
+import { authHeader } from "../services/authServices";
 
 const TableAlunos = ({ alunos, setAlunos }) => {
     const [alunoExcluir, setAlunoExcluir] = useState(null);
@@ -18,7 +19,7 @@ const TableAlunos = ({ alunos, setAlunos }) => {
 
     function excluirAluno() {
         axios
-            .delete(`http://localhost:8080/api/alunos/${alunoExcluir._id}`)
+            .delete(`http://localhost:8080/api/alunos/${alunoExcluir._id}`, { headers: authHeader() })
             .then((data) => {
                 const alunosAtualizados = alunos.filter((aluno) => aluno._id !== alunoExcluir._id);
                 setAlunos(alunosAtualizados);

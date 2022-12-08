@@ -1,12 +1,12 @@
-import axios from "axios";
 import * as yup from "yup";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FormInput from "../components/FormInput";
 import FormCheckbox from "../components/FormCheckbox";
+import { login } from "../services/authServices";
 
 const Login = () => {
-    const [inputs, setInputs] = useState({});
+    const [inputs, setInputs] = useState({ email: "", senha: "", lembrar: false });
     const [errors, setErrors] = useState({});
 
     const navigate = useNavigate();
@@ -14,35 +14,33 @@ const Login = () => {
     const validator = yup.object().shape({
         email: yup.string().email("E-mail inválido.").required("E-mail é obrigatório."),
         senha: yup.string().min(6, "Senha deve ter pelo menos 6 caracteres.").max(12, "Senha deve ter no máximo 12 caracteres.").required("Senha é obrigatória."),
-        lembrar: yup.boolean().required("Situação é obrigatória."),
+        lembrar: yup.boolean().required('A caixa "Lembrar de mim" deve ser informada.'),
     });
 
     function handleChange(event) {
         //rawValue é o valor sem máscara e value é o valor com máscara
-        const value = event.target.rawValue ? event.target.rawValue : event.target.value;
-        const name = event.target.name;
-        setInputs({ ...inputs, [name]: value });
+        if (event.target.type === "checkbox") {
+            const value = event.target.checked;
+            const name = event.target.name;
+            setInputs({ ...inputs, [name]: value });
+        } else {
+            const value = event.target.rawValue ? event.target.rawValue : event.target.value;
+            const name = event.target.name;
+            setInputs({ ...inputs, [name]: value });
+        }
     }
 
     function handleSubmit(event) {
         event.preventDefault();
         validator
             .validate(inputs, { abortEarly: false })
-            .then(() => {
+            .then(async () => {
                 setErrors({});
-                axios
-                    .post("http://localhost:8080/api/auth/login", inputs)
-                    .then((response) => {
-                        if (response.status === 200) {
-                            console.log("Login efetuado com sucesso!");
-                            navigate("/alunos");
-                        } else {
-                            console.log(response);
-                        }
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    });
+                if (await login(inputs.email, inputs.senha, inputs.lembrar)) {
+                    navigate("/alunos");
+                } else {
+                    setErrors({ email: "Usuário ou senha inválidos." });
+                }
             })
             .catch((error) => {
                 setErrors({});
@@ -54,10 +52,15 @@ const Login = () => {
 
     return (
         <>
-            <div className="container my-5">
+            <div className="container my-5" style={{ minWidth: "480px" }}>
                 <div className="col-6 col-md-4 col-xl-3 mx-auto">
-                    <div className="d-flex justify-content-between align-items-center">
-                        <h1>Login</h1>
+                    <p className="text-center" style={{ fontSize: "150px" }}>
+                        🏋
+                    </p>
+                    <h1 className="text-center display-3">Academia</h1>
+                    <hr />
+                    <div className="d-flex justify-content-center align-items-center">
+                        <h2>Login</h2>
                     </div>
 
                     <form onSubmit={handleSubmit} noValidate autoComplete="off">
@@ -71,7 +74,7 @@ const Login = () => {
                             <FormCheckbox field="lembrar" label="Lembrar de mim" onChange={handleChange} value={inputs?.lembrar} />
                         </div>
                         <div className="mt-3">
-                            <button type="submit" className="btn btn-primary">
+                            <button type="submit" className="btn btn-dark btn-lg w-100">
                                 Entrar
                             </button>
                         </div>

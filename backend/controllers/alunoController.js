@@ -64,3 +64,13 @@ export const getAlunos = async (req, res, next) => {
         next(error);
     }
 };
+
+export const getAlunosAtivos = async (req, res, next) => {
+    try {
+        const alunosAtivos = await Aluno.find();
+        console.log(alunosAtivos);
+        res.status(200).json(alunosAtivos);
+    } catch (error) {
+        next(error);
+    }
+};
